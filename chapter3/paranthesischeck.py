@@ -60,7 +60,7 @@ class PCheck(Stack):
                             error = 1
                     else:
                         error = 2
-                        
+
         if not self.isEmpty() and error == 0:
             error = 3
         return error, self.items
@@ -70,7 +70,7 @@ i = input('Enter expresion : ')
 check = PCheck(i)
 err,s = check.solve()
 if err == 0:
-    print(i, 'Match')
+    print(i, 'MATCH')
 elif err == 1:
     print(i, 'Unmatch open-close')
 elif err == 2:
