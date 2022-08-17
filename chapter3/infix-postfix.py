@@ -31,7 +31,8 @@ class Stack():
     def isEmpty(self):
         return self.__len__() == 0
 
-operators = '^*/+-'
+operators = '+-*/^'
+paran = '()'
 
 class Conversion(Stack):
     def __init__(self, infix:str) -> None:
@@ -40,80 +41,62 @@ class Conversion(Stack):
 
     def getCurrentRank(self) -> int:
         rank = 0
-        if self.peek() == '(':
-            rank = 1
-        elif self.peek() == '^':
-            rank = 4
-        elif self.peek() in '*/':
+        if self.peek() == '^':
             rank = 3
-        elif self.peek() in '+-':
+        elif self.peek() in '*/':
             rank = 2
-        elif self.peek() == ')':
-            rank = 0
+        elif self.peek() in '+-':
+            rank = 1
         return rank
-    
-    def checkRank(self, op:str, rank:int) -> bool:
-        if op in '+-' and rank < 2:
-            return True
-        if op in '*/' and rank < 3:
-            return True     
-        if op == '^' and rank < 4:
-            return True
-        if op == '(':
-            return True
-        
-        return False
     
     def getRank(self, op:str) -> int:
         if op in '+-':
-            return 2
+            return 1
         if op in '*/':
-            return 3     
+            return 2     
         if op == '^':
-            return 4
-        if op == '(':
+            return 3
+        if op in '()':
             return 0
-        if op == ')':
-            return 7
 
     def solve(self):
         output = ""
-        for index, char in enumerate(self.infix):
-            if char in operators or char in '()':
-                print(output, char)
-                print(self.__str__())
+        for ch in self.infix:
+            if ch not in operators and ch not in paran:
+                output += ch
+            else:
                 if self.isEmpty():
-                    self.push(char)
+                    self.push(ch)
                 else:
-                    currentRank = self.getCurrentRank()
-                    if self.checkRank(char, currentRank):
-                        self.push(char)
+                    if ch in paran:
+                        self.push(ch)
+                        if ch == ')':
+                            self.pop()
+                            while not self.isEmpty():
+                                if self.peek() == '(':
+                                    self.pop()
+                                    break
+                                else:
+                                    output += str(self.pop())
                     else:
-                        while self.__len__() > 0 and self.getRank(self.peek()) >= self.getRank(char):
-                            if self.peek() in '()':
-                                break
-                            else:
+                        rank = self.getCurrentRank()
+                        if self.getRank(ch) > rank:
+                            self.push(ch)
+                        elif self.getRank(ch) == rank:
+                            output += str(self.pop())
+                            self.push(ch)
+                        else:
+                            while not self.isEmpty() and self.getRank(self.peek()) >= self.getRank(ch):
                                 output += str(self.pop())
-                        self.push(char)   
-                print(self.__str__())
-                print()
-            else:
-                output += char
-                # if not self.isEmpty() and index == len(self.infix)-1:
-                #     output += str(self.pop())
-                
-
+                            self.push(ch)
         while not self.isEmpty():
-            if self.peek() in '()':
-                    self.pop()
-            else:
+            if self.peek() not in '()':
                 output += str(self.pop())
-                    
-            # print(output, char,self.__str__())
+            else:
+                self.pop()
         return output
-
 
 inp = input('Enter Infix : ')
 c = Conversion(inp)
 
-print('Postfix : ', c.solve())
+print('Postfix :', c.solve())
