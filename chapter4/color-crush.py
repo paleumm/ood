@@ -38,6 +38,9 @@ class Queue():
     def reverse(self):
         if not self.isEmpty():
             self.items.reverse()
+    def peek(self):
+        if not self.isEmpty():
+            return self[0]
 
 class Stack():
     def __init__(self, ls=None, max=None) -> None:
@@ -80,6 +83,10 @@ class Stack():
     def isFull(self):
         return self.__len__() == self.limit
 
+    def reverse(self):
+        if not self.isEmpty():
+            self.items.reverse()
+
 class color():
     def __init__(self, normal:list, mirror):
         self.normalQ = Queue(normal)
@@ -96,8 +103,17 @@ class color():
 
     def solve(self):
         self.mirror()
-        self.normal()
+        ex, fail = self.normal()
         print('NORMAL : ')
+        self.normalS.reverse()
+        print(len(self.normalS))
+        if self.normalS.isEmpty():
+            print('Empty')
+        else:
+            print("".join(self.normalS))
+        print(f'{ex} Explosive(s) ! ! ! (NORMAL)')
+        if fail > 0:
+            print(f'Failed Interrupted {fail} Bomb(s)')
         print('------------MIRROR------------')
         print(': RORRIM')
         print(len(self.mirrorS))
@@ -109,45 +125,56 @@ class color():
 
     def normal(self):
         normalB, normalS = self.bomb(self.normalQ)
-        normalB_interrupted = self.checkBomb(self.normalQ, normalB)
-        print(self.normalB, normalS)
+        num_normalB = len(normalB)
+        num_mirrorB = len(self.mirrorB)
+        normalB_interrupted = self.addInterrupt(self.mirrorB, self.normalQ, normalB, normalS)
+        self.normalB, self.normalS = self.bomb(normalB_interrupted)
+
+        num_bomb = len(self.normalB)
+
+        fail = 0
+        explode = 0
+        
+        if self.normalB.isEmpty():
+            return explode, fail
+
+        if num_normalB > num_bomb:
+            explode = num_bomb
+        elif num_bomb == num_normalB:
+            fail = num_mirrorB
+            explode = num_bomb - fail
+        elif num_bomb > num_normalB:
+            fail = num_bomb - num_normalB
+            explode = num_bomb
+       
+        return explode, fail
+        
 
     def mirror(self):
         self.mirrorB, self.mirrorS = self.bomb(self.mirrorQ, isMirror=True)
         self.mirrorS.reverse()
 
     # normalQ -> normal input, bombQ -> queue of bomb in normal
-    def checkBomb(self, normalQ:Queue, bombQ:Queue, bombS:Stack) -> Queue:
-        interrupt = self.mirrorB # interrupt from mirror
-        output = Queue()
-        bomb = 0 # num of bomb
-        success = 0 # num of normal succes
-        failed = 0 # failed interrupt
-        stack = Stack()
+    def addInterrupt(self, interrupt:Queue, normalQ:Queue, bombQ:Queue, bombS) -> Queue:
         if interrupt.isEmpty(): # no interrupt
             for bomb in bombS:
                 output.enQueue(bomb,0)
-        else:
-            # push interrupt to queue
+        else:   
+            # add interrupt to normalQ
             if not interrupt.isEmpty():
-                loop_count = 0
-                for idx, b in enumerate(normalQ):
-                    if b_index > len(interrupt):
-                       break
-                    else: 
-                        if bombQ[b_index] == b: # normal bomb case
-                            loop_count+=1
-                            if loop_count == 3:
-                                normalQ.enQueue(interrupt.deQueue(), idx-1)
-                                b_index += 1
-                                loop_count = 0
-                        
-
-            
-        return output
-
-    def bombIn(self):
-        pass
+                count = 0
+                for idx, bomb in enumerate(normalQ):
+                    if bombQ.isEmpty() or interrupt.isEmpty():
+                        break
+                    if bomb == bombQ.peek():
+                        count += 1
+                        if count == 3:
+                            normalQ.enQueue(interrupt.deQueue(), idx)
+                            count = 0
+                            bombQ.deQueue()
+                    elif bomb != bombQ.peek() and count > 0:
+                        count = 0
+        return normalQ
 
     def bomb(self, q:Queue, isMirror=False, isInterrupted=False) -> Queue:
         bombS = Stack()
@@ -176,25 +203,3 @@ mirror = [*inp[1]]
 
 bomb = color(normal, mirror)
 bomb.solve()
-
-# q = Queue([1,2,3])
-# print(q)
-# q.reverse()
-# print(q)
-
-'''
-if not interrupt.isEmpty():
-            loop_count = 0
-            for idx, b in enumerate(normalQ):
-                if b_index > len(interrupt):
-                    output.enQueue(interrupt.deQueue())
-                else: 
-                    if bombQ[b_index] == b: # normal bomb case
-                        loop_count+=1
-                        if loop_count == 3:
-                            normalQ.enQueue(interrupt.deQueue(), idx-1)
-                            b_index += 1
-                            loop_count = 0
-                    else:
-                        output.enQueue(b)
-'''
