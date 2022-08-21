@@ -104,16 +104,20 @@ class color():
     def solve(self):
         self.mirror()
         ex, fail = self.normal()
+
         print('NORMAL : ')
         self.normalS.reverse()
         print(len(self.normalS))
+
         if self.normalS.isEmpty():
             print('Empty')
         else:
             print("".join(self.normalS))
+
         print(f'{ex} Explosive(s) ! ! ! (NORMAL)')
         if fail > 0:
             print(f'Failed Interrupted {fail} Bomb(s)')
+
         print('------------MIRROR------------')
         print(': RORRIM')
         print(len(self.mirrorS))
@@ -127,6 +131,7 @@ class color():
         normalB, normalS = self.bomb(self.normalQ)
         num_normalB = len(normalB)
         num_mirrorB = len(self.mirrorB)
+
         normalB_interrupted = self.addInterrupt(self.mirrorB, self.normalQ, normalB, normalS)
         self.normalB, self.normalS = self.bomb(normalB_interrupted)
 
@@ -145,7 +150,7 @@ class color():
             explode = num_bomb - fail
         elif num_bomb > num_normalB:
             fail = num_bomb - num_normalB
-            explode = num_bomb
+            explode = num_bomb - fail
        
         return explode, fail
         
@@ -156,24 +161,19 @@ class color():
 
     # normalQ -> normal input, bombQ -> queue of bomb in normal
     def addInterrupt(self, interrupt:Queue, normalQ:Queue, bombQ:Queue, bombS) -> Queue:
-        if interrupt.isEmpty(): # no interrupt
-            for bomb in bombS:
-                output.enQueue(bomb,0)
-        else:   
-            # add interrupt to normalQ
-            if not interrupt.isEmpty():
-                count = 0
-                for idx, bomb in enumerate(normalQ):
-                    if bombQ.isEmpty() or interrupt.isEmpty():
-                        break
-                    if bomb == bombQ.peek():
-                        count += 1
-                        if count == 3:
-                            normalQ.enQueue(interrupt.deQueue(), idx)
-                            count = 0
-                            bombQ.deQueue()
-                    elif bomb != bombQ.peek() and count > 0:
+        if not interrupt.isEmpty():
+            count = 0
+            for idx, bomb in enumerate(normalQ):
+                if bombQ.isEmpty() or interrupt.isEmpty():
+                    break
+                if bomb == bombQ.peek():
+                    count += 1
+                    if count == 3:
+                        normalQ.enQueue(interrupt.deQueue(), idx)
                         count = 0
+                        bombQ.deQueue()
+                elif bomb != bombQ.peek() and count > 0:
+                    count = 0
         return normalQ
 
     def bomb(self, q:Queue, isMirror=False, isInterrupted=False) -> Queue:
