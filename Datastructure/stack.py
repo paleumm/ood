@@ -14,6 +14,10 @@ class Stack():
 
     def __len__(self) -> int:
         return len(self.items)
+    
+    def reverse(self):
+        if not self.isEmpty():
+            self.items.reverse()
 
     def push(self, x):
         if not self.isFull():  
