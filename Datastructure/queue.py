@@ -35,4 +35,9 @@ class Queue():
                 self.items.append(x)
             else:
                 self.items.insert(index, x)
-
+    def reverse(self):
+        if not self.isEmpty():
+            self.items.reverse()
+    def peek(self):
+        if not self.isEmpty():
+            return self[0]
