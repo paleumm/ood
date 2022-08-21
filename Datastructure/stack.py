@@ -1,6 +1,6 @@
 class Stack():
-    def __init__(self, max=None, ls=None) -> None:
-        if list is None:
+    def __init__(self, ls=None, max=None) -> None:
+        if ls is None:
             self.items = []
         else:
             self.items = ls
@@ -12,7 +12,7 @@ class Stack():
     def __getitem__(self, i:int):
         return self.items[i]
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.items)
 
     def push(self, x):
