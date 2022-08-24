@@ -1,50 +1,43 @@
-from platform import node
-
-
 class Node:
-    def __init__(self, data):
+    def __init__(self, data, next:Node = None):
         self.data = data
-        self.next = None
-        self.index = 0
+        self.next = next
 
     def __str__(self) -> str:
-        return f'{self.index} {self.data} {self.next}'
+        return f'{self.data}'
 
 class LinkedList:
-    def __init__(self, node:Node=None, ls:list = None, format:str=" "):
-        self.head = None
-        self.tail = None
-        self.length = 0
-        self.format = format
-        # if node is not None:
-        #     self.head = node
-        #     self.tail = node
-        #     self.length += 1
-        
+    def __init__(self, head=None):
+        if head is None:
+            self.head = self.tail = None
+            self.length = 0
+        else:
+            self.head = head
+            temp = self.head
+            self.length = 1
+            while temp.next is not None:
+                temp = temp.next
+                self.length += 1
+            self.tail = temp
+
     def isEmpty(self):
         return self.head is None
 
     def append(self, node:Node):
-        # node.index = self.length
         if self.isEmpty():
-            self.head = node
-            self.tail = node
+            self.head = self.tail = node
         else:
             self.tail.next = node
-            self.tail = self.tail.next
+            self.tail = node
 
         self.length += 1
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.isEmpty():
             return "Empty"
-        
         cur, s = self.head, f'{self.head.data} '
-        while cur.next != None:
-            # s += f'{cur.next.data}'
+        while cur.next is not None:
             s += f'{cur.next.data} '
-            # if cur.next is not self.tail:
-            #     s += f'{self.format}'
             cur = cur.next
         return s
 
@@ -79,28 +72,18 @@ class LinkedList:
         if idx >= self.length:
             return None
 
-        if idx == 0:
+        if idx == 0: # remove head
             self.head = self.head.next
 
         else:
-            i = 0
-            cur = self.head
-            while cur is not None and i < idx:
-                if i + 1 == idx:
-                    cur.next
-                    cur.next 
-
-                cur = cur.next
-                i += 1
+            pass
         self.length -= 1
 
-
-# length can be decreased if index out of range
     def insert(self, x:Node, idx=None):
         if idx >= self.length:
             return None
 
-        if idx is None:
+        if idx is None or idx == self.length - 1:
             self.append(x)
         else:
             if idx == 0:
@@ -116,9 +99,7 @@ class LinkedList:
 
                     cur = cur.next
                     i += 1
-        self.length += 1
-                        
-
+        self.length += 1           
 
     def __getitem__(self, i:int):
         if self.isEmpty():
