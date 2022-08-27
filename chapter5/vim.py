@@ -8,9 +8,8 @@ class DoublyLinkedList:
     def __init__(self):
         self.head = Node('Empty', None, None)
         self.tail = Node(None, None, None)
-        self.cursor = Node('|', self.head, self.tail)
-        self.head.next = self.cursor
-        self.tail.prev = self.cursor
+        self.head.next = self.tail
+        self.tail.prev = self.head
         self.length = 0
 
     def __str__(self):
@@ -147,6 +146,9 @@ class DoublyLinkedList:
 class Vim(DoublyLinkedList):
     def __init__(self):
         super().__init__()
+        self.cursor = Node('|', self.head, self.tail)
+        self.head.next = self.cursor
+        self.tail.prev = self.cursor
 
     def do(self, command: str):
         commands = command.split(',')
