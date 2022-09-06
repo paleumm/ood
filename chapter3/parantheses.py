@@ -55,7 +55,7 @@ class PCheck(Stack):
                 self.push(char)
             else:
                 if char in closeParan:
-                    if not self.isEmpty() > 0:
+                    if not self.isEmpty():
                         if not self.isMatch(self.pop(), char):
                             error = 1
                     else:
