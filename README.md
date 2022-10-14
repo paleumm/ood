@@ -8,11 +8,11 @@ This repository contains all of my `ood` lab code.
 .
 ├── Datastructure
 │   ├── queue.py
-│   └── stack.py
+│   ├── stack.py
+│   └── ...
 ├── chapter1
-├── chapter2
-├── chapter3
-└── chapter4
+├── ...
+└── chapter(n)
 ```
 
 `Datastructure` : some of my datastructure
