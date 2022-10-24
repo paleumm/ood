@@ -20,3 +20,15 @@ class AVL:
 
     def insert(self, data):
         pass
+
+    def getHeight(self, root):
+        if root is None:
+            return 0
+
+        l = self.getHeight(root.left)
+        r = self.getHeight(root.right)
+
+        if l > r:
+            return l + 1
+        else:
+            return r + 1
