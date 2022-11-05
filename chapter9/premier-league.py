@@ -6,10 +6,12 @@ class Team:
         self.draws = draws
         self.scored = scored
         self.conceded = conceded
-
+    
     def __str__(self) -> str:
-        t = {'points': (self.wins*3 + self.draws*1)}
-        gd = {'gd': (self.scored - self.conceded)}
+        pt = self.wins*3 + self.draws*1
+        gdd = self.scored - self.conceded
+        t = {'points' : pt}
+        gd = {'gd': gdd}
         return f'[\'{self.name}\', {t}, {gd}]'
     
     def __lt__(self, other):
@@ -38,7 +40,7 @@ def mergesort(L : list):
         k = 0
 
         while i < len(LL) and j < len(RL):
-            if LL[i] < RL[j]:
+            if LL[i] > RL[j]:
                 L[k] = LL[i]
                 i += 1
             else:
@@ -80,10 +82,13 @@ T = []
 for i in inp:
     ii = i.split(',')
     t = Team(ii[0],int(ii[1]),int(ii[2]),int(ii[3]),int(ii[4]),int(ii[5]))
-    T.append(T)
-
-print(T)
+    T.append(t)
 
 print("== results ==")
 
 T = mergesort(T)
+for i in T:
+    print(i)
+# T = Team('Man U', 4, 4, 10, 100, 50)
+
+# print(T)
