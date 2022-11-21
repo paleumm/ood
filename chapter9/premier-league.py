@@ -61,19 +61,6 @@ def mergesort(L : list):
 
     return L
 
-def printTeam(tt: Team):
-    s = '['
-    s += '\''
-    s += tt.name
-    s += '\''
-    s += ', {\'points\': '
-    s += str(tt.wins*3 + tt.draws*1)
-    s += '}, {\'gd\': '
-    s += str(tt.scored - tt.conceded)
-    s += '}]'
-    return s
-
-
     
 inp = input('Enter Input : ').split('/')
 
